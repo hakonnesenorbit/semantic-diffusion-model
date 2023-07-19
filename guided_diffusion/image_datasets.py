@@ -58,6 +58,10 @@ def load_data(
         all_files = _list_image_files_recursively(os.path.join(data_dir, 'train' if is_train else 'test', 'images'))
         classes = _list_image_files_recursively(os.path.join(data_dir, 'train' if is_train else 'test', 'labels'))
         instances = _list_image_files_recursively(os.path.join(data_dir, 'train' if is_train else 'test', 'labels'))
+    elif dataset_mode == 'sonar':
+        all_files = _list_image_files_recursively(os.path.join(data_dir, 'train' if is_train else 'val', 'images'))
+        classes = _list_image_files_recursively(os.path.join(data_dir, 'train' if is_train else 'val', 'segmentations'))
+        instances = None
     else:
         raise NotImplementedError('{} not implemented'.format(dataset_mode))
 
@@ -176,6 +180,8 @@ class ImageDataset(Dataset):
             arr_class[arr_class == 255] = 150
         elif self.dataset_mode == 'coco':
             arr_class[arr_class == 255] = 182
+        elif self.dataset_mode == 'sonar':
+            arr_class[arr_class == 255] = 1
 
         out_dict['label'] = arr_class[None, ]
 
